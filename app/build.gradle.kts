@@ -4,6 +4,8 @@ plugins {
     id("com.google.devtools.ksp")
     //dagger hilt
     id("com.google.dagger.hilt.android")
+    //firebase
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -84,4 +86,9 @@ dependencies {
 
     //navigation
     implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+    //Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
+    implementation("com.google.firebase:firebase-auth")
 }
