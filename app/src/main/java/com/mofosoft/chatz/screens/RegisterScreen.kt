@@ -49,6 +49,7 @@ import androidx.navigation.NavController
 import com.mofosoft.chatz.ChatViewModel
 import com.mofosoft.chatz.CommonProgressBar
 import com.mofosoft.chatz.R
+import com.mofosoft.chatz.CheckIfRegistered
 import com.mofosoft.chatz.data.registerData.RegisterUIEvent
 import com.mofosoft.chatz.data.registerData.RegisterViewModel
 import com.mofosoft.chatz.myRouter.Screen
@@ -58,6 +59,9 @@ fun RegisterScreen(
     navController: NavController,
     chatViewModel: ChatViewModel
 ) {
+
+    CheckIfRegistered(navController = navController, chatViewModel = chatViewModel)
+
     var email by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }

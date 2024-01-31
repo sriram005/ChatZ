@@ -41,11 +41,11 @@ class MainActivity : ComponentActivity() {
     fun ChatAppNavigation(){
         val navController = rememberNavController()
 
-        var chatViewModel = hiltViewModel<ChatViewModel>()
+        val chatViewModel = hiltViewModel<ChatViewModel>()
 
         NavHost(
             navController = navController,
-            startDestination = Screen.register.route
+            startDestination = Screen.login.route
         ){
             composable(
                 route = Screen.login.route

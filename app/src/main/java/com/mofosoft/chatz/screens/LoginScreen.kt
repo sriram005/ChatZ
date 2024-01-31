@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mofosoft.chatz.ChatViewModel
+import com.mofosoft.chatz.CheckIfLogedIn
 import com.mofosoft.chatz.R
 import com.mofosoft.chatz.data.loginData.LoginUIEvent
 import com.mofosoft.chatz.data.loginData.LoginViewModel
@@ -56,6 +57,8 @@ fun LoginScreen(
      navController: NavController,
      chatViewModel: ChatViewModel
 ) {
+     CheckIfLogedIn(navController = navController, chatViewModel = chatViewModel)
+
      var email by remember { mutableStateOf("") }
      var password by remember { mutableStateOf("") }
      var password_visible by remember { mutableStateOf(false) }
@@ -159,7 +162,10 @@ fun LoginScreen(
 
                          Button(
                               onClick = {
-
+                                   chatViewModel.LoginUser(
+                                        email = loginViewModel.loginUiState.value.email,
+                                        password = loginViewModel.loginUiState.value.password
+                                   )
                               },
                               colors = ButtonDefaults.buttonColors(
                                    containerColor = MaterialTheme.colorScheme.primary,
@@ -175,15 +181,13 @@ fun LoginScreen(
 
                          Spacer(modifier = Modifier.height(10.dp))
 
-
-
                          Row (
                               verticalAlignment = Alignment.CenterVertically
                          ){
                               Text(text = "Don't have an account?")
                               TextButton(
                                    onClick = {
-                                        //navController.navigate(Screen.register.route)
+                                        navController.navigate(Screen.register.route)
                                    },
                                    modifier = Modifier.padding(0.dp)
                               ) {
