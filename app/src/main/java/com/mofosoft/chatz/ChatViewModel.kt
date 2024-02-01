@@ -132,9 +132,6 @@ class ChatViewModel @Inject constructor(
                     logIn.value = true
                 }
             }
-            .addOnFailureListener {
-                inProgress.value = false
-                handleException(it, it.message)
-            }
+
     }
 }

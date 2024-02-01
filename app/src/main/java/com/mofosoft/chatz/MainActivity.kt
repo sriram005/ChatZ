@@ -68,13 +68,19 @@ class MainActivity : ComponentActivity() {
             composable(
                 route = Screen.profile.route
             ){
-                ProfileScreen(navController)
+                ProfileScreen(
+                    navController = navController,
+                    chatViewModel = chatViewModel
+                )
             }
 
             composable(
                 route = Screen.chat.route
             ){
-                ChatScreen(navController)
+                ChatScreen(
+                    navController = navController,
+                    chatViewModel = chatViewModel
+                )
             }
         }
     }
