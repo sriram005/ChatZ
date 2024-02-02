@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -22,9 +21,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.ExitToApp
-import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -35,18 +33,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mofosoft.chatz.ChatViewModel
 import com.mofosoft.chatz.CommomImage
 import com.mofosoft.chatz.CommonProgressBar
+import com.mofosoft.chatz.myRouter.Screen
 
 @Composable
 fun ProfileScreen(
@@ -81,18 +82,19 @@ fun ProfileScreen(
 
                     Text(
                         modifier = Modifier.weight(1f),
-                        text = "Update Profile",
+                        text = "Profile",
                         fontSize = 19.sp,
                         color = MaterialTheme.colorScheme.onPrimary
                     )
 
                     IconButton(
                         onClick = {
-
+                            chatViewModel.logout()
+                            navController.navigate(Screen.login.route)
                         }) {
                         Icon(
                             imageVector = Icons.Rounded.ExitToApp,
-                            contentDescription = "profile",
+                            contentDescription = "logout",
                             tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
@@ -101,16 +103,26 @@ fun ProfileScreen(
         ) {
             if (inProgress)
                 CommonProgressBar()
-            else
+            else {
+
+                val userdata = chatViewModel.userData.value
+                var name by rememberSaveable { mutableStateOf(userdata?.name?:"") }
+                var number by rememberSaveable { mutableStateOf(userdata?.number?:"") }
                 EditScreen(
                     paddingValues = it,
                     chatViewModel = chatViewModel,
-                    name = "",
-                    number = "",
-                    onNameChanged = {},
-                    onNumberChanged = {},
-                    onSave = {}
+                    name = name,
+                    number = number,
+                    onNameChanged = { name  = it},
+                    onNumberChanged = { number = it},
+                    onSave = {
+                        chatViewModel.createOrUpdateProfile(
+                            name = name,
+                            number = number,
+                        )
+                    }
                 )
+            }
         }
     }
 }
@@ -119,13 +131,14 @@ fun ProfileScreen(
 fun EditScreen(
     paddingValues: PaddingValues,
     chatViewModel: ChatViewModel,
-    name : String,
+    name: String,
     number: String,
-    onNameChanged : (String) -> Unit,
-    onNumberChanged : (String) -> Unit,
-    onSave : () -> Unit
+    onNameChanged: (String) -> Unit,
+    onNumberChanged: (String) -> Unit,
+    onSave: () -> Unit
 ) {
     val imageUrl = chatViewModel.userData.value?.imageUrl
+
     Column(
         modifier = Modifier
             .padding(paddingValues.calculateTopPadding())
@@ -193,11 +206,12 @@ fun EditScreen(
         ) {
             Icon(
                 modifier = Modifier.padding(end = 6.dp),
-                imageVector = Icons.Rounded.ExitToApp,
-                contentDescription = "Save Changes"
+                imageVector = Icons.Rounded.Done,
+                contentDescription = "Save Changes",
+                tint = MaterialTheme.colorScheme.onPrimary
             )
             Text(
-                text = "Logout",
+                text = "Save Changes",
                 fontSize = 16.sp
             )
         }
@@ -206,13 +220,13 @@ fun EditScreen(
 
 @Composable
 fun ProfileImage(
-    imageUrl : String?,
+    imageUrl: String?,
     chatViewModel: ChatViewModel
 ) {
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ){uri->
-        uri?.let{
+    ) { uri ->
+        uri?.let {
             chatViewModel.uploadProfileImage(uri)
         }
     }
@@ -237,6 +251,6 @@ fun ProfileImage(
         }
         Text(text = "Change profile Photo")
     }
-    if(chatViewModel.inProgress.value)
+    if (chatViewModel.inProgress.value)
         CommonProgressBar()
 }

@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.mofosoft.chatz.data.USER_NODE
@@ -75,7 +76,7 @@ class ChatViewModel @Inject constructor(
 
     }
 
-    private fun createOrUpdateProfile(name: String? = null, number: String? = null, imageUrl: String? = null){
+    fun createOrUpdateProfile(name: String? = null, number: String? = null, imageUrl: String? = null){
         val uId = auth.currentUser?.uid
         val userData = UserData(
             userId = uId,
@@ -89,7 +90,15 @@ class ChatViewModel @Inject constructor(
             db.collection(USER_NODE).document(uId).get()
                 .addOnSuccessListener {
                     if(it.exists()){
-                        //update user data
+                        db.collection(USER_NODE).document(uId).set(userData, SetOptions.merge())
+                            .addOnSuccessListener{
+                                inProgress.value = false
+                                getUserData(uId)
+                            }
+                            .addOnFailureListener {
+                                handleException(it, "Cannot Update User Data")
+                                inProgress.value = false
+                            }
                     }
                     else {
                         db.collection(USER_NODE).document(uId).set(userData)
@@ -162,5 +171,12 @@ class ChatViewModel @Inject constructor(
             .addOnFailureListener {
                 handleException(it, it.message)
             }
+    }
+
+    fun logout(){
+        auth.signOut()
+        logIn.value = false
+        userData.value = null
+
     }
 }
