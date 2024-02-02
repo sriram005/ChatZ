@@ -1,9 +1,11 @@
 package com.mofosoft.chatz
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -12,7 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.mofosoft.chatz.myRouter.Screen
 
 @Composable
@@ -56,4 +60,19 @@ fun CheckIfLogedIn(
             popUpTo(0)
         }
     }
+}
+
+@Composable
+fun CommomImage(
+    data : String?,
+    modifier: Modifier = Modifier.wrapContentSize(),
+    contentScale: ContentScale = ContentScale.Crop
+) {
+    val painter = rememberImagePainter(data = data)
+    Image(
+        painter = painter,
+        contentDescription = null,
+        contentScale = contentScale,
+        modifier = modifier
+    )
 }

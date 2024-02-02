@@ -2,6 +2,7 @@ package com.mofosoft.chatz
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
@@ -9,16 +10,19 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
+import com.google.firebase.storage.FirebaseStorage
 import com.mofosoft.chatz.data.USER_NODE
 import com.mofosoft.chatz.data.UserData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.UUID
 import javax.inject.Inject
 
 @SuppressLint("StaticFieldLeak")
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     val auth : FirebaseAuth,
-    val db : FirebaseFirestore
+    val db : FirebaseFirestore,
+    val storage : FirebaseStorage
 ) : ViewModel() {
 
     lateinit var context : Context
@@ -71,7 +75,7 @@ class ChatViewModel @Inject constructor(
 
     }
 
-    private fun createOrUpdateProfile(name: String, number: String, imageUrl: String? = null){
+    private fun createOrUpdateProfile(name: String? = null, number: String? = null, imageUrl: String? = null){
         val uId = auth.currentUser?.uid
         val userData = UserData(
             userId = uId,
@@ -133,5 +137,30 @@ class ChatViewModel @Inject constructor(
                 }
             }
 
+    }
+
+    fun uploadProfileImage(uri : Uri){
+        uploadImage(uri = uri){
+            createOrUpdateProfile(
+                imageUrl = it.toString()
+            )
+        }
+    }
+
+    fun uploadImage(uri : Uri, onSuccess:(Uri) -> Unit){
+        inProgress.value = true
+        val storageref = storage.reference
+        val uuid = UUID.randomUUID()
+        val imageRef = storageref.child("images/$uuid")
+        val uploadTask = imageRef.putFile(uri)
+        uploadTask.addOnSuccessListener {
+            val result = it.metadata?.reference?.downloadUrl
+
+            result?.addOnSuccessListener(onSuccess)
+            inProgress.value = false
+        }
+            .addOnFailureListener {
+                handleException(it, it.message)
+            }
     }
 }
