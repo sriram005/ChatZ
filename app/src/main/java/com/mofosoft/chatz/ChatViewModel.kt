@@ -12,6 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
+import com.mofosoft.chatz.data.ChatData
 import com.mofosoft.chatz.data.USER_NODE
 import com.mofosoft.chatz.data.UserData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,10 +29,12 @@ class ChatViewModel @Inject constructor(
 
     lateinit var context : Context
     var inProgress = mutableStateOf(false)
+    var inProcessChats = mutableStateOf(false)
     val userData = mutableStateOf<UserData?>(null)
     var logIn = mutableStateOf(false)
     var signIn = mutableStateOf(false)
 
+    val chats = mutableStateOf<List<ChatData>>(listOf())
     init {
         val currentUser = auth.currentUser
         logIn.value = currentUser != null
@@ -177,6 +180,10 @@ class ChatViewModel @Inject constructor(
         auth.signOut()
         logIn.value = false
         userData.value = null
+
+    }
+
+    fun onAddChat(it : String){
 
     }
 }
