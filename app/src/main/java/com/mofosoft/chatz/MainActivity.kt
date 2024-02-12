@@ -14,6 +14,7 @@ import com.mofosoft.chatz.ui.theme.ChatZTheme
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
 import com.mofosoft.chatz.myRouter.Screen
+import com.mofosoft.chatz.screens.ChatListScreen
 import com.mofosoft.chatz.screens.ChatScreen
 import com.mofosoft.chatz.screens.LoginScreen
 import com.mofosoft.chatz.screens.ProfileScreen
@@ -75,12 +76,25 @@ class MainActivity : ComponentActivity() {
             }
 
             composable(
-                route = Screen.chat.route
+                route = Screen.chatList.route
             ){
-                ChatScreen(
+                ChatListScreen(
                     navController = navController,
                     chatViewModel = chatViewModel
                 )
+            }
+
+            composable(
+                route = Screen.chat.route
+            ){
+                val chatId : String? =  it.arguments?.getString("chatId")
+                chatId?.let {
+                    ChatScreen(
+                        navController = navController,
+                        chatViewModel = chatViewModel,
+                        chatId = it
+                    )
+                }
             }
         }
     }

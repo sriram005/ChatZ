@@ -132,6 +132,8 @@ class ChatViewModel @Inject constructor(
                     var user =  value.toObject<UserData>()
                     userData.value = user
                     inProgress.value = false
+
+                    populateChat()
                 }
         }
     }
@@ -239,5 +241,27 @@ class ChatViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun populateChat(){
+        inProcessChats.value = true
+        db.collection(CHATS).where(
+            Filter.or(
+                Filter.equalTo("user1.userId", userData.value?.userId),
+                Filter.equalTo("user2.userId", userData.value?.userId),
+            )
+        )
+            .addSnapshotListener { value, error ->
+                if(error!=null){
+                    handleException(msg = error.message)
+                }
+                if (value != null){
+                    chats.value = value.documents.mapNotNull {
+                        it.toObject<ChatData>()
+                    }
+                    inProcessChats.value = false
+                }
+                inProcessChats.value = false
+            }
     }
 }
