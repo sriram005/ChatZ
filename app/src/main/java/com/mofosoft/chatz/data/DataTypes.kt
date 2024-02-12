@@ -24,6 +24,6 @@ data class ChatData(
 data class ChatUser(
     val userId : String? = "",
     val name : String?= "",
-    val imageUrl : String = "",
+    val imageUrl : String? = "",
     val number: String? = ""
 )
