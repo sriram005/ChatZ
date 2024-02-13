@@ -56,20 +56,20 @@ class ChatViewModel @Inject constructor(
                         if(it.isSuccessful){
                             signIn.value = true
                             inProgress.value = false
-                            Log.d("check", "${it.isSuccessful}")
+//                            Log.d("check", "${it.isSuccessful}")
                             createOrUpdateProfile(name, number)
                         }
                         else{
                             inProgress.value = false
                             Toast.makeText(
                                 context,
-                                "Failed to Signed in",
+                                "Failed to register",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
                     }
                     .addOnFailureListener{
-                        handleException(it,"Failed to Sign in")
+                        handleException(msg = "Failed to Sign in")
                         inProgress.value = false
                     }
             }
@@ -129,7 +129,7 @@ class ChatViewModel @Inject constructor(
                     handleException(error, "Cannot Retrieve User")
                 }
                 if(value != null){
-                    var user =  value.toObject<UserData>()
+                    val user =  value.toObject<UserData>()
                     userData.value = user
                     inProgress.value = false
 
@@ -154,6 +154,10 @@ class ChatViewModel @Inject constructor(
                 inProgress.value = false
                 if(it.isSuccessful) {
                     logIn.value = true
+                    val uId = auth.currentUser?.uid
+                    uId?.let {
+                        getUserData(it)
+                    }
                 }
             }
 
@@ -226,7 +230,7 @@ class ChatViewModel @Inject constructor(
                                     userId = chatPartner.userId,
                                     name = chatPartner.name,
                                     number = chatPartner.number,
-                                    imageUrl = chatPartner.number
+                                    imageUrl = chatPartner.imageUrl
                                 )
                             )
                             db.collection(CHATS).document(id).set(chat)
