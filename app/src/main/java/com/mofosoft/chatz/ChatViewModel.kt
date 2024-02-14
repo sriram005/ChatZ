@@ -18,9 +18,12 @@ import com.google.firebase.storage.FirebaseStorage
 import com.mofosoft.chatz.data.CHATS
 import com.mofosoft.chatz.data.ChatData
 import com.mofosoft.chatz.data.ChatUser
+import com.mofosoft.chatz.data.MESSAGE
+import com.mofosoft.chatz.data.Message
 import com.mofosoft.chatz.data.USER_NODE
 import com.mofosoft.chatz.data.UserData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.Calendar
 import java.util.UUID
 import javax.inject.Inject
 
@@ -267,5 +270,14 @@ class ChatViewModel @Inject constructor(
                 }
                 inProcessChats.value = false
             }
+    }
+    fun onSendMessage(chatId : String, message : String){
+        val time = Calendar.getInstance().time.toString()
+        val msg = Message(
+            sendBy = userData.value?.userId,
+            message = message,
+            timestamp = time
+        )
+        db.collection(CHATS).document(chatId).collection(MESSAGE).document().set(msg)
     }
 }
