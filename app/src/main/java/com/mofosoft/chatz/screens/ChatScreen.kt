@@ -1,5 +1,6 @@
 package com.mofosoft.chatz.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -25,6 +28,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,13 +43,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mofosoft.chatz.ChatViewModel
+import com.mofosoft.chatz.CommomImage
+import com.mofosoft.chatz.data.Message
 
 @Composable
 fun ChatScreen(
     navController: NavController,
     chatViewModel: ChatViewModel,
-    chatId : String
+    chatId : String,
 ) {
+
+    val myUser = chatViewModel.userData.value
+    val currentChat = chatViewModel.chats.value.first{ it.chatId == chatId }
+    val chatUser = if(myUser?.userId == currentChat.user1.userId) currentChat.user2 else currentChat.user1
+
+    LaunchedEffect(key1 = Unit ){
+        chatViewModel.populateMessages(chatId)
+    }
+    BackHandler {
+        chatViewModel.dePopulateMessage()
+    }
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -63,13 +80,23 @@ fun ChatScreen(
                     Icon(
                         modifier = Modifier.clickable {
                             navController.popBackStack()
+                            chatViewModel.dePopulateMessage()
                         },
                         imageVector = Icons.Rounded.ArrowBack,
-                        contentDescription = "back"
+                        contentDescription = "back",
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                    CommomImage(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .size(40.dp)
+                            .clip(shape = CircleShape)
+                            .background(Color.Red),
+                        data = chatUser.imageUrl
                     )
                     Text(
                         modifier = Modifier.weight(1f),
-                        text = "User",
+                        text = chatUser.name ?: "Unknown User",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimary
@@ -81,6 +108,7 @@ fun ChatScreen(
             ChatView(
                 paddingValues = it,
                 chatViewModel = chatViewModel,
+                currUser = myUser?.userId ?: "",
                 chatId = chatId
             )
         }
@@ -91,6 +119,7 @@ fun ChatScreen(
 fun ChatView(
     paddingValues: PaddingValues,
     chatViewModel: ChatViewModel,
+    currUser : String,
     chatId: String
 ) {
     var message by remember { mutableStateOf("") }
@@ -98,7 +127,7 @@ fun ChatView(
         chatViewModel.onSendMessage(chatId, message)
         message = ""
     }
-
+    val chatMessages = chatViewModel.chatMessages.value
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -107,15 +136,31 @@ fun ChatView(
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
+                .padding(10.dp)
         ){
-            items(50){
-                Text(text = "HI")
+            items(chatMessages){
+                msg ->
+                    val alignment = if(msg.sendBy == currUser) Alignment.End else Alignment.Start
+                    val color = if(msg.sendBy == currUser) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                    Column (
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = alignment
+                    ){
+                        Text(
+                            modifier = Modifier.clip(RoundedCornerShape(8.dp))
+                                .background(color)
+                                .padding(12.dp),
+                            text = msg.message ?: "",
+                            color = Color.White
+                        )
+                    }
             }
         }
         SendBox(message = message, onMessageChanged = {
             message = it
         }) {
-
+            chatViewModel.onSendMessage(chatId, message)
+            message = ""
         }
     }
 }
