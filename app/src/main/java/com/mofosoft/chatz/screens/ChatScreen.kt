@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -62,6 +64,7 @@ fun ChatScreen(
     }
     BackHandler {
         chatViewModel.dePopulateMessage()
+        navController.popBackStack()
     }
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -91,14 +94,14 @@ fun ChatScreen(
                             .padding(8.dp)
                             .size(40.dp)
                             .clip(shape = CircleShape)
-                            .background(Color.Red),
+                            .background(MaterialTheme.colorScheme.secondary),
                         data = chatUser.imageUrl
                     )
                     Text(
                         modifier = Modifier.weight(1f),
                         text = chatUser.name ?: "Unknown User",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Normal,
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
@@ -136,10 +139,10 @@ fun ChatView(
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
-                .padding(10.dp)
+                .padding(10.dp),
         ){
-            items(chatMessages){
-                msg ->
+            itemsIndexed(chatMessages){
+                index, msg ->
                     val alignment = if(msg.sendBy == currUser) Alignment.End else Alignment.Start
                     val color = if(msg.sendBy == currUser) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
                     Column (
@@ -147,12 +150,14 @@ fun ChatView(
                         horizontalAlignment = alignment
                     ){
                         Text(
-                            modifier = Modifier.clip(RoundedCornerShape(8.dp))
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(8.dp))
                                 .background(color)
                                 .padding(12.dp),
                             text = msg.message ?: "",
                             color = Color.White
                         )
+                        Spacer(modifier = Modifier.height(5.dp))
                     }
             }
         }

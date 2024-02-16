@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -119,12 +120,13 @@ fun CommonRow(
                 .padding(8.dp)
                 .size(50.dp)
                 .clip(shape = CircleShape)
-                .background(Color.Red)
+                .background(MaterialTheme.colorScheme.secondary)
         )
         Text(
             text = name ?: "-----",
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(start = 4.dp)
+            modifier = Modifier.padding(start = 4.dp),
+            color = MaterialTheme.colorScheme.onPrimary
         )
     }
 }

@@ -94,9 +94,14 @@ fun ChatListScreen(
                     shape = CircleShape,
                     onClick = {
                         showDialog.value = true
-                    }
+                    },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 ) {
-                    Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add chat")
+                    Icon(
+                        imageVector = Icons.Rounded.Add,
+                        contentDescription = "Add chat",
+                    )
                 }
             }
         ) {
