@@ -99,7 +99,7 @@ fun LoginScreen(
                               .fillMaxWidth()
                               .weight(1f)
                               .clip(shape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp))
-                              .background(color = Color.White),
+                              .background(color = MaterialTheme.colorScheme.background),
                          horizontalAlignment = Alignment.CenterHorizontally,
                          verticalArrangement = Arrangement.Center
                     ) {
@@ -110,7 +110,7 @@ fun LoginScreen(
                                    email = it
                                    loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))
                               },
-                              placeholder = { Text(text = "Email") },
+                              label = { Text(text = "Email") },
                               maxLines = 1,
                               keyboardOptions = KeyboardOptions(
                                    imeAction = ImeAction.Next,
@@ -137,7 +137,7 @@ fun LoginScreen(
                                    password = it
                                    loginViewModel.onEvent(LoginUIEvent.PasswordChanged(it))
                               },
-                              placeholder = { Text(text = "Password") },
+                              label = { Text(text = "Password") },
                               maxLines = 1,
                               keyboardOptions = KeyboardOptions(
                                    imeAction = ImeAction.Done,
@@ -184,7 +184,7 @@ fun LoginScreen(
                          Row (
                               verticalAlignment = Alignment.CenterVertically
                          ){
-                              Text(text = "Don't have an account?")
+                              Text(text = "Don't have an account?", color = MaterialTheme.colorScheme.onPrimary)
                               TextButton(
                                    onClick = {
                                         navController.navigate(Screen.register.route)

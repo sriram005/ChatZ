@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -105,28 +106,32 @@ fun CommonRow(
     name : String?,
     onItemClick : () -> Unit
 ) {
-    Row (
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(75.dp)
-            .clickable {
-                onItemClick.invoke()
-            },
-        verticalAlignment = Alignment.CenterVertically
+    Card (
+        modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp)
     ){
-        CommomImage(
-            data = image,
+        Row (
             modifier = Modifier
-                .padding(8.dp)
-                .size(50.dp)
-                .clip(shape = CircleShape)
-                .background(MaterialTheme.colorScheme.secondary)
-        )
-        Text(
-            text = name ?: "-----",
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(start = 4.dp),
-            color = MaterialTheme.colorScheme.onPrimary
-        )
+                .fillMaxWidth()
+                .height(75.dp)
+                .clickable {
+                    onItemClick.invoke()
+                },
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            CommomImage(
+                data = image,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .size(50.dp)
+                    .clip(shape = CircleShape)
+                    .background(MaterialTheme.colorScheme.secondary)
+            )
+            Text(
+                text = name ?: "-----",
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 4.dp),
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        }
     }
 }

@@ -112,7 +112,7 @@ fun RegisterScreen(
                             .fillMaxWidth()
                             .weight(1f)
                             .clip(shape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp))
-                            .background(color = Color.White),
+                            .background(color = MaterialTheme.colorScheme.background),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
@@ -282,7 +282,10 @@ fun RegisterScreen(
                         Row (
                             verticalAlignment = Alignment.CenterVertically
                         ){
-                            Text(text = "Already have an Account?")
+                            Text(
+                                text = "Already have an Account?",
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
                             TextButton(
                                 onClick = {
                                     navController.navigate(Screen.login.route)

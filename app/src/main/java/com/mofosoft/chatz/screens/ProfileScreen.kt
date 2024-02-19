@@ -249,7 +249,10 @@ fun ProfileImage(
         ) {
             CommomImage(data = imageUrl)
         }
-        Text(text = "Change profile Photo")
+        Text(
+            text = "Change profile Photo",
+            color = MaterialTheme.colorScheme.onPrimary
+        )
     }
     if (chatViewModel.inProgress.value)
         CommonProgressBar()
