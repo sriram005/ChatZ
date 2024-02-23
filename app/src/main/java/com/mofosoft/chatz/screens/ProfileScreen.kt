@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mofosoft.chatz.ChatViewModel
-import com.mofosoft.chatz.CommomImage
+import com.mofosoft.chatz.CommonImage
 import com.mofosoft.chatz.CommonProgressBar
 import com.mofosoft.chatz.myRouter.Screen
 
@@ -247,7 +247,7 @@ fun ProfileImage(
                 .padding(8.dp)
                 .size(100.dp)
         ) {
-            CommomImage(data = imageUrl)
+            CommonImage(data = imageUrl)
         }
         Text(
             text = "Change profile Photo",

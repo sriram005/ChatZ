@@ -76,7 +76,7 @@ fun CheckIfLogedIn(
 }
 
 @Composable
-fun CommomImage(
+fun CommonImage(
     data : String?,
     modifier: Modifier = Modifier.wrapContentSize(),
     contentScale: ContentScale = ContentScale.Crop
@@ -118,7 +118,7 @@ fun CommonRow(
                 },
             verticalAlignment = Alignment.CenterVertically
         ){
-            CommomImage(
+            CommonImage(
                 data = image,
                 modifier = Modifier
                     .padding(8.dp)

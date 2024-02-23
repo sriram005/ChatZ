@@ -14,12 +14,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Send
 import androidx.compose.material3.Icon
@@ -40,13 +38,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.mofosoft.chatz.ChatViewModel
-import com.mofosoft.chatz.CommomImage
-import com.mofosoft.chatz.data.Message
+import com.mofosoft.chatz.CommonImage
 
 @Composable
 fun ChatScreen(
@@ -89,7 +85,7 @@ fun ChatScreen(
                         contentDescription = "back",
                         tint = MaterialTheme.colorScheme.onPrimary
                     )
-                    CommomImage(
+                    CommonImage(
                         modifier = Modifier
                             .padding(8.dp)
                             .size(40.dp)
